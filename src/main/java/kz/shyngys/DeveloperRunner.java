@@ -37,7 +37,7 @@ public class DeveloperRunner {
 
         transaction = session.beginTransaction();
         Developer developer = new Developer(firstName, lastName, specialty, experience);
-        session.save(developer);
+        session.persist(developer);
         transaction.commit();
         session.close();
     }
@@ -61,7 +61,7 @@ public class DeveloperRunner {
         transaction = session.beginTransaction();
         Developer developer = session.get(Developer.class, developerId);
         developer.setExperience(experience);
-        session.update(developer);
+        session.merge(developer);
         transaction.commit();
         session.close();
     }
@@ -72,7 +72,7 @@ public class DeveloperRunner {
 
         transaction = session.beginTransaction();
         Developer developer = session.get(Developer.class, developerId);
-        session.delete(developer);
+        session.remove(developer);
         transaction.commit();
         session.close();
     }
