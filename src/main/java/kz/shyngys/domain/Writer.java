@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "writers")
 @NoArgsConstructor
 @Data
+@ToString(exclude = "posts")
 public class Writer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

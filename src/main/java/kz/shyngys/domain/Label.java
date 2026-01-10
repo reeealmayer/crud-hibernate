@@ -2,6 +2,7 @@ package kz.shyngys.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Table(name = "labels")
 @Data
 @NoArgsConstructor
+@ToString(exclude = "posts")
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,6 @@ public class Label {
     private Long id;
     @Column(name = "name", length = 100)
     private String name;
-    @ManyToMany(mappedBy = "labels")
+    @ManyToMany(mappedBy = "labels", fetch = FetchType.LAZY)
     private Set<Post> posts = new HashSet<>();
 }
