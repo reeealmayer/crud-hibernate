@@ -34,7 +34,7 @@ public class Main {
 //        System.out.println(byId);
 //        System.out.println(byId.getPosts());
         Writer writer = new Writer();
-        writer.setId(6L);
+        writer.setId(2L);
         writerRepository.deleteById(writer);
     }
 }

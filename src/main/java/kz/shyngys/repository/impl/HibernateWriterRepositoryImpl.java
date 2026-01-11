@@ -87,7 +87,6 @@ public class HibernateWriterRepositoryImpl implements WriterRepository {
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
-                ;
             }
             throw new RuntimeException("Ошибка при обновлении удалении Writer: " + e);
         }
