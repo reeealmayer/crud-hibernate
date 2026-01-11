@@ -16,10 +16,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -29,8 +32,10 @@ import java.util.Set;
 @Table(name = "posts")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(exclude = {"labels", "writer"})
 @EqualsAndHashCode(of = "id")
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +59,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "label_id")
     )
+    @Builder.Default
     private Set<Label> labels = new HashSet<>();
 
     @PrePersist

@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,9 +21,11 @@ import java.util.List;
 @Entity
 @Table(name = "writers")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @ToString(exclude = "posts")
 @EqualsAndHashCode(of = "id")
+@Builder
 public class Writer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +36,7 @@ public class Writer {
     @Column(name = "last_name", length = 100)
     private String lastName;
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     public void addPost(Post post) {
