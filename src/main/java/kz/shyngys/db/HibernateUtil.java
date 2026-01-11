@@ -8,22 +8,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateSessionFactoryUtil {
+public class HibernateUtil {
     private static SessionFactory sessionFactory;
-    private static Session session;
 
-    private HibernateSessionFactoryUtil() {
+    private HibernateUtil() {
     }
 
     public static Session getSession() {
-        if (session == null) {
-            try {
-                session = getSessionFactory().openSession();
-            } catch (Exception e) {
-                throw new RuntimeException("Не удалось создать соединение с БД", e);
-            }
-        }
-        return session;
+        return getSessionFactory().openSession();
     }
 
     public static SessionFactory getSessionFactory() {

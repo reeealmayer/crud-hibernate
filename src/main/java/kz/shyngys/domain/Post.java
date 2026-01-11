@@ -17,6 +17,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -29,6 +30,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @ToString(exclude = {"labels", "writer"})
+@EqualsAndHashCode(of = "id")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

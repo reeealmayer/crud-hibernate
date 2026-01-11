@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -20,6 +21,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @ToString(exclude = "posts")
+@EqualsAndHashCode(of = "id")
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
