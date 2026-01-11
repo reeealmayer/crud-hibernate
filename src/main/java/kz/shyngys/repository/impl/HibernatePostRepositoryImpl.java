@@ -4,6 +4,7 @@ package kz.shyngys.repository.impl;
 import kz.shyngys.db.HibernateUtil;
 import kz.shyngys.domain.Label;
 import kz.shyngys.domain.Post;
+import kz.shyngys.domain.Status;
 import kz.shyngys.exception.NotFoundException;
 import kz.shyngys.repository.PostRepository;
 import org.hibernate.HibernateException;
@@ -99,15 +100,17 @@ public class HibernatePostRepositoryImpl implements PostRepository {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSession()) {
             transaction = session.beginTransaction();
-            session.createQuery("delete from Post p where p.id = :id")
-                    .setParameter("id", post.getId())
-                    .executeUpdate();
+            Post persistentPost = session.get(Post.class, post.getId());
+            if (persistentPost == null) {
+                throw new NotFoundException("Post не найден с ид: " + post.getId());
+            }
+            persistentPost.setStatus(Status.DELETED);
             transaction.commit();
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Ошибка при обновлении удалении Post: " + e);
+            throw new RuntimeException("Ошибка при удалении Post: " + e);
         }
     }
 
@@ -152,94 +155,4 @@ public class HibernatePostRepositoryImpl implements PostRepository {
                 .setParameter("name", name)
                 .uniqueResult();
     }
-
-
-//    private Long savePost(Post post) throws SQLException {
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatementWithGeneratedKeys(SQL_INSERT_POST)) {
-//            ps.setString(1, post.getContent());
-//            ps.setString(2, post.getStatus().name());
-//            ps.setLong(3, post.getWriter().getId());
-//
-//            int affectedRows = ps.executeUpdate();
-//            if (affectedRows == 0) {
-//                throw new SQLException("Создание Post не удалось, ни одна строка не добавлена");
-//            }
-//
-//            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    return generatedKeys.getLong(1);
-//                }
-//                throw new SQLException("Создание Post не удалось, id не получен");
-//            }
-//        }
-//    }
-//
-//    private void updatePost(Post post) throws SQLException {
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatement(SQL_UPDATE_POST)) {
-//            ps.setString(1, post.getContent());
-//            ps.setString(2, post.getStatus().name());
-//            ps.setLong(3, post.getWriter().getId());
-//            ps.setLong(4, post.getId());
-//
-//            int affectedRows = ps.executeUpdate();
-//            if (affectedRows == 0) {
-//                throw new NotFoundException("Post с id " + post.getId() + " не найден для обновления");
-//            }
-//        }
-//    }
-//
-//    private void savePostLabels(Long postId, List<Label> labels) throws SQLException {
-//        for (Label label : labels) {
-//            Long labelId = getOrCreateLabel(label.getName());
-//            label.setId(labelId);
-//            linkPostLabel(postId, labelId);
-//        }
-//    }
-//
-//    private void deletePostLabels(Long postId) throws SQLException {
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatement(SQL_DELETE_POST_LABELS)) {
-//            ps.setLong(1, postId);
-//            ps.executeUpdate();
-//        }
-//    }
-//
-//    private Long getOrCreateLabel(String name) throws SQLException {
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatement(SQL_GET_LABEL_BY_NAME)) {
-//            ps.setString(1, name);
-//
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getLong("id");
-//                }
-//            }
-//        }
-//
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatementWithGeneratedKeys(SQL_INSERT_LABEL)) {
-//            ps.setString(1, name);
-//
-//            int affectedRows = ps.executeUpdate();
-//            if (affectedRows == 0) {
-//                throw new SQLException("Создание Label не удалось");
-//            }
-//
-//            try (ResultSet keys = ps.getGeneratedKeys()) {
-//                if (keys.next()) {
-//                    return keys.getLong(1);
-//                }
-//                throw new SQLException("Не удалось получить ID label");
-//            }
-//        }
-//    }
-//
-//    private void linkPostLabel(Long postId, Long labelId) throws SQLException {
-//        try (PreparedStatement ps = DatabaseUtils.getTransactionPreparedStatement(SQL_INSERT_POST_LABEL)) {
-//            ps.setLong(1, postId);
-//            ps.setLong(2, labelId);
-//
-//            int affectedRows = ps.executeUpdate();
-//            if (affectedRows == 0) {
-//                throw new SQLException("Не удалось связать Post и Label");
-//            }
-//        }
-//    }
 }

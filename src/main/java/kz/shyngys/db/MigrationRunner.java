@@ -3,7 +3,7 @@ package kz.shyngys.db;
 import org.flywaydb.core.Flyway;
 
 public class MigrationRunner {
-    public static void main(String[] args) {
+    public static void migrate() {
         Flyway flyway = Flyway.configure()
                 .dataSource(
                         DBProperties.URL,
