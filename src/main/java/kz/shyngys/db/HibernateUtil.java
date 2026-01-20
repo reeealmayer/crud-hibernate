@@ -21,7 +21,7 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
-                Configuration configuration = new Configuration().configure();
+                Configuration configuration = new Configuration();
                 configuration.addAnnotatedClass(Label.class);
                 configuration.addAnnotatedClass(Post.class);
                 configuration.addAnnotatedClass(Writer.class);

@@ -34,14 +34,11 @@ public class HibernatePostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> getAll() {
         try (Session session = HibernateUtil.getSession()) {
-            List<Post> posts = session.createQuery(
-                    "select p from Post p",
+            return session.createQuery(
+                    "select distinct p from Post p " +
+                            "left join fetch p.labels",
                     Post.class
             ).getResultList();
-
-            posts.forEach(p -> p.getLabels().size()); //TODO сделать через запрос, как на строке 22
-
-            return posts;
         } catch (HibernateException e) {
             throw new RuntimeException("Ошибка при получении всех Post: " + e);
         }
@@ -107,9 +104,6 @@ public class HibernatePostRepositoryImpl implements PostRepository {
             persistentPost.setStatus(Status.DELETED);
             transaction.commit();
         } catch (HibernateException e) {
-            if (transaction != null) { //TODO можно убрать, т.к. млао логики
-                transaction.rollback();
-            }
             throw new RuntimeException("Ошибка при удалении Post: " + e);
         }
     }
