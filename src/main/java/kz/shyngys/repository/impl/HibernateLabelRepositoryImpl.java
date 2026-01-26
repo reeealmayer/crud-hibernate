@@ -2,7 +2,6 @@ package kz.shyngys.repository.impl;
 
 import kz.shyngys.db.HibernateUtil;
 import kz.shyngys.domain.Label;
-import kz.shyngys.domain.Post;
 import kz.shyngys.exception.NotFoundException;
 import kz.shyngys.repository.LabelRepository;
 import org.hibernate.HibernateException;
